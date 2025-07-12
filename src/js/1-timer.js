@@ -29,7 +29,7 @@ console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20
 
 
 const refs = {
-  dateTimePicker: document.querySelector('#datetime-picker');
+  dateTimePicker: document.querySelector('#datetime-picker'),
   dataStart: document.querySelector('button[data-start]'),
   options: {
     enableTime: true,
