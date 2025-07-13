@@ -1,7 +1,7 @@
-import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -26,33 +26,67 @@ console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
-
-
 const refs = {
-  dateTimePicker: document.querySelector('#datetime-picker'),
+  dateTimePicker: document.querySelector('input#datetime-picker'),
   dataStart: document.querySelector('button[data-start]'),
-  options: {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-      console.log(selectedDates[0]);
-    },
-  }
-}
-
-
-const calendar = flatpickr("#datetime-picker", refs.options);
-
-calendar.input.value = calendar.config.defaultDate;
+  dataPoints: document.querySelectorAll('div.timer span.value'),
+  intervalId: null,
+};
 
 let userSelectedDate;
-if(calendar.onClose <= new Date().now){
-window.alert('Please choose a date in the future');
-refs.dataStart.setAttribute('disabled', true);
-}
-userSelectedDate = calendar.onClose();
+refs.dataStart.disabled = true;
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    if (selectedDates[0] < new Date()) {
+      window.alert('Please choose a date in the future');
+      refs.dataStart.disabled = true;
+    } else if (selectedDates[0] > new Date()) {
+      refs.dataStart.disabled = false;
+      userSelectedDate = new Date(selectedDates[0]);
+
+      console.log(userSelectedDate.getTime());
+    }
+  },
+};
+
+const calendar = flatpickr(refs.dateTimePicker, options);
+
+const timeCount = () => {
+  const today = new Date();
+  const result = convertMs(userSelectedDate.getTime() - today.getTime());
+  Array.from(refs.dataPoints).forEach(
+    dataPoint =>
+      (dataPoint.textContent =
+        result[dataPoint.nextElementSibling.textContent.toLowerCase()])
+  );
+};
+
+refs.dataStart.addEventListener('click', () => {
+  timeCount();
+  refs.intervalId = setInterval(timeCount, 1000);
+  got;
+  refs.dataStart.disabled = true;
+  refs.dateTimePicker.disabled = true;
+});
+
+// calendar.element.addEventListener('input', () => {
+//   console.log(calendar.config.onClose());
+// });
+
+//calendar.input.value = calendar.config.defaultDate;
+
+// if (calendar.selectedDates[0] < calendar.config.defaultDate) {
+//   refs.dataStart.disabled = true;
+//   window.alert('Please choose a date in the future');
+// } else {
+//   userSelectedDate = calendar.selectedDates[0];
+//   refs.dataStart.disabled = false;
+// }
+//userSelectedDate = calendar.onClose();
 
 /*
 Вибір дати
