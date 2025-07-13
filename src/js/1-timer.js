@@ -68,7 +68,7 @@ const timeCount = () => {
 refs.dataStart.addEventListener('click', () => {
   timeCount();
   refs.intervalId = setInterval(timeCount, 1000);
-  got;
+
   refs.dataStart.disabled = true;
   refs.dateTimePicker.disabled = true;
 });
