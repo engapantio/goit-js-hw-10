@@ -30,15 +30,23 @@ const refs = {
   dateTimePicker: document.querySelector('input#datetime-picker'),
   dataStart: document.querySelector('button[data-start]'),
   dataPoints: document.querySelectorAll('div.timer span.value'),
+  result: 0,
+  copy: 0,
   intervalId: null,
+  timeoutId: null,
 };
 
 let userSelectedDate;
+
 refs.dataStart.disabled = true;
+
 const options = {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
+  locale: {
+    firstDayOfWeek: 1,
+  },
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] < new Date()) {
@@ -48,45 +56,90 @@ const options = {
       refs.dataStart.disabled = false;
       userSelectedDate = new Date(selectedDates[0]);
 
-      console.log(userSelectedDate.getTime());
+      // console.log(userSelectedDate.getTime());
     }
   },
 };
 
 const calendar = flatpickr(refs.dateTimePicker, options);
 
+const addLeadingZero = value => String(value).padStart(2, '0');
+
 const timeCount = () => {
   const today = new Date();
-  const result = convertMs(userSelectedDate.getTime() - today.getTime());
+  let msResult = userSelectedDate.getTime() - today.getTime();
+  const result = convertMs(msResult);
   Array.from(refs.dataPoints).forEach(
     dataPoint =>
-      (dataPoint.textContent =
-        result[dataPoint.nextElementSibling.textContent.toLowerCase()])
+      (dataPoint.textContent = addLeadingZero(
+        result[dataPoint.nextElementSibling.textContent.toLowerCase()]
+      ))
   );
 };
 
-refs.dataStart.addEventListener('click', () => {
-  timeCount();
-  refs.intervalId = setInterval(timeCount, 1000);
+function toggleInputsDisable() {
+  if (
+    refs.dataStart.disabled === true &&
+    refs.dateTimePicker.disabled === true
+  ) {
+    refs.dataStart.disabled = false;
+    refs.dateTimePicker.disabled = false;
+    return;
+  }
+  if (
+    refs.dataStart.disabled === false &&
+    refs.dateTimePicker.disabled === false
+  ) {
+    refs.dataStart.disabled = true;
+    refs.dateTimePicker.disabled = true;
+  }
+}
 
-  refs.dataStart.disabled = true;
-  refs.dateTimePicker.disabled = true;
+// function setCountdown(value, idNumber) {
+//   if (value === 0) {
+//     console.log(idNumber);
+//     clearInterval(idNumber);
+//     toggleInputDisable();
+//   } else {
+//     updateTimeValues(value);
+//   }
+// }
+
+refs.dataStart.addEventListener('click', () => {
+  toggleInputsDisable();
+  timeCount();
+  const today = new Date();
+  const todayMs = today.getTime();
+  const end = userSelectedDate.getTime();
+  let i = ((end - todayMs) / 1000).toFixed(0);
+  refs.intervalId = setInterval(function () {
+    console.log(--i);
+    if (i === 0) {
+      toggleInputsDisable();
+      clearInterval(refs.intervalId);
+    } else {
+      timeCount();
+    }
+  }, 1000);
 });
 
-// calendar.element.addEventListener('input', () => {
-//   console.log(calendar.config.onClose());
+//   refs.intervalId = setInterval(function () {
+//     console.log(--i);
+//     if (i === 0) {
+//       clearInterval(refs.intervalId);
+//     }
+//     console.log('post-interval');
+//   }, 1000);
 // });
 
-//calendar.input.value = calendar.config.defaultDate;
+//refs.copy = refs.result;);
 
-// if (calendar.selectedDates[0] < calendar.config.defaultDate) {
-//   refs.dataStart.disabled = true;
-//   window.alert('Please choose a date in the future');
-// } else {
-//   userSelectedDate = calendar.selectedDates[0];
-//   refs.dataStart.disabled = false;
+// refs.timeoutId = setTimeout(() => {
+//   clearInterval(refs.intervalId);
+// }, refs.copy);
+// if (refs.result === 0) {
+//   clearInterval(refs.intervalId);
 // }
-//userSelectedDate = calendar.onClose();
 
 /*
 Вибір дати
