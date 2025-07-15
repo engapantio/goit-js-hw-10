@@ -67,6 +67,18 @@ button[data-start]:disabled {
   border-image: none !important;
 }
 
+.error-message {
+  border-bottom: 2px solid #ffbebe;
+  border-radius: 4px;
+  width: 302px;
+  height: 64px;
+  letter-spacing: 0.03em;
+}
+
+button.iziToast-close {
+  background-image: url(/img/close-icon.svg) !important;
+}
+
 div.timer {
   margin-top: 32px;
   margin-left: 156px;

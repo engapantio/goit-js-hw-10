@@ -50,7 +50,30 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] < new Date()) {
-      window.alert('Please choose a date in the future');
+      iziToast.error({
+        backgroundColor: '#ef4040',
+        class: 'error-message',
+        title: 'Error',
+        titleColor: '#fff',
+        titleSize: '16px',
+        titleLineHeight: 1.5,
+        message: 'Please choose a date in the future',
+        messageColor: '#fff',
+        messageSize: '16px',
+        messageLineHeight: 1.5,
+        position: 'topRight',
+        iconUrl: '/img/x-octagon.svg',
+      });
+      // iziToast.show({
+      //   title: 'Error',
+      //   titleColor: '#fff',
+      //   titleSize: '16px',
+      //   message: 'Please choose a date in the future',
+      //   messageColor: '#fff',
+
+      //
+      //   position: 'topRight',
+      // });
       refs.dataStart.disabled = true;
     } else if (selectedDates[0] > new Date()) {
       refs.dataStart.disabled = false;
@@ -77,69 +100,24 @@ const timeCount = () => {
   );
 };
 
-function toggleInputsDisable() {
-  if (
-    refs.dataStart.disabled === true &&
-    refs.dateTimePicker.disabled === true
-  ) {
-    refs.dataStart.disabled = false;
-    refs.dateTimePicker.disabled = false;
-    return;
-  }
-  if (
-    refs.dataStart.disabled === false &&
-    refs.dateTimePicker.disabled === false
-  ) {
-    refs.dataStart.disabled = true;
-    refs.dateTimePicker.disabled = true;
-  }
-}
-
-// function setCountdown(value, idNumber) {
-//   if (value === 0) {
-//     console.log(idNumber);
-//     clearInterval(idNumber);
-//     toggleInputDisable();
-//   } else {
-//     updateTimeValues(value);
-//   }
-// }
-
 refs.dataStart.addEventListener('click', () => {
-  toggleInputsDisable();
+  refs.dataStart.disabled = true;
+  refs.dateTimePicker.disabled = true;
   timeCount();
   const today = new Date();
   const todayMs = today.getTime();
   const end = userSelectedDate.getTime();
-  let i = ((end - todayMs) / 1000).toFixed(0);
+  let i = Math.floor((end - todayMs) / 1000);
   refs.intervalId = setInterval(function () {
-    console.log(--i);
+    i--;
     if (i === 0) {
-      toggleInputsDisable();
+      refs.dateTimePicker.disabled = false;
       clearInterval(refs.intervalId);
     } else {
       timeCount();
     }
   }, 1000);
 });
-
-//   refs.intervalId = setInterval(function () {
-//     console.log(--i);
-//     if (i === 0) {
-//       clearInterval(refs.intervalId);
-//     }
-//     console.log('post-interval');
-//   }, 1000);
-// });
-
-//refs.copy = refs.result;);
-
-// refs.timeoutId = setTimeout(() => {
-//   clearInterval(refs.intervalId);
-// }, refs.copy);
-// if (refs.result === 0) {
-//   clearInterval(refs.intervalId);
-// }
 
 /*
 Вибір дати
