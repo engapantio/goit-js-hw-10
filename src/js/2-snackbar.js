@@ -3,18 +3,17 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 const formElement = document.querySelector('form.form');
 const fieldSet = document.querySelector('form fieldset');
-let delay = 0;
+
 let isToBeFulfilled;
 console.log(formElement.elements.state);
 
 fieldSet.addEventListener('click', e => {
   isToBeFulfilled = e.target.value === 'fulfilled' ? true : false;
-  console.log(isToBeFulfilled);
 });
 
 formElement.addEventListener('submit', e => {
   e.preventDefault();
-  delay = Number.parseInt(formElement.elements.delay.value);
+  const delay = Number.parseInt(formElement.elements.delay.value);
   const promise = new Promise((resolve, reject) => {
     console.log(delay);
     setTimeout(() => {
@@ -28,7 +27,7 @@ formElement.addEventListener('submit', e => {
     .then(value => {
       //console.log(value);
       iziToast.success({
-        message: `✅ Fulfilled promise in ${value}ms`,
+        message: `✅ Fulfilled promise in ${delay}ms`,
         position: 'topRight',
         icon: 'none',
       });
@@ -36,8 +35,9 @@ formElement.addEventListener('submit', e => {
     .catch(err => {
       //  console.log(err);
       iziToast.error({
-        message: `❌ Rejected promise in ${err}ms`,
+        message: `❌ Rejected promise in ${delay}ms`,
         position: 'topRight',
+        icon: 'none',
       });
     });
 });
