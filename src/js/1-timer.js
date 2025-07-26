@@ -22,9 +22,9 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
-console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
-console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
+// console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
+// console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
+// console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
 const refs = {
   dateTimePicker: document.querySelector('input#datetime-picker'),
@@ -62,24 +62,12 @@ const options = {
         messageSize: '16px',
         messageLineHeight: 1.5,
         position: 'topRight',
-        iconUrl: '/img/x-octagon.svg',
+        iconUrl: './img/x-octagon.svg',
       });
-      // iziToast.show({
-      //   title: 'Error',
-      //   titleColor: '#fff',
-      //   titleSize: '16px',
-      //   message: 'Please choose a date in the future',
-      //   messageColor: '#fff',
-
-      //
-      //   position: 'topRight',
-      // });
       refs.dataStart.disabled = true;
     } else if (selectedDates[0] > new Date()) {
       refs.dataStart.disabled = false;
       userSelectedDate = new Date(selectedDates[0]);
-
-      // console.log(userSelectedDate.getTime());
     }
   },
 };
@@ -110,11 +98,13 @@ refs.dataStart.addEventListener('click', () => {
   let i = Math.floor((end - todayMs) / 1000);
   refs.intervalId = setInterval(function () {
     i--;
-    if (i === 0) {
-      refs.dateTimePicker.disabled = false;
-      clearInterval(refs.intervalId);
-    } else {
+    if (i >= 0) {
       timeCount();
+    } else {
+      setTimeout(() => {
+        clearInterval(refs.intervalId);
+        refs.dateTimePicker.disabled = false;
+      }, 0);
     }
   }, 1000);
 });

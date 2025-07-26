@@ -4,20 +4,14 @@ import 'izitoast/dist/css/iziToast.min.css';
 const formElement = document.querySelector('form.form');
 const fieldSet = document.querySelector('form fieldset');
 
-let isToBeFulfilled;
-console.log(formElement.elements.state);
-
-fieldSet.addEventListener('click', e => {
-  isToBeFulfilled = e.target.value === 'fulfilled' ? true : false;
-});
-
 formElement.addEventListener('submit', e => {
   e.preventDefault();
+
+  const status = fieldSet.elements.state.checked;
   const delay = Number.parseInt(formElement.elements.delay.value);
   const promise = new Promise((resolve, reject) => {
-    console.log(delay);
     setTimeout(() => {
-      if (isToBeFulfilled) {
+      if (status) {
         resolve(delay);
       } else {
         reject(delay);
@@ -25,21 +19,20 @@ formElement.addEventListener('submit', e => {
     }, delay);
   })
     .then(value => {
-      //console.log(value);
       iziToast.success({
-        message: `✅ Fulfilled promise in ${delay}ms`,
+        message: `✅ Fulfilled promise in ${value} ms`,
         position: 'topRight',
         icon: 'none',
       });
     })
     .catch(err => {
-      //  console.log(err);
       iziToast.error({
-        message: `❌ Rejected promise in ${delay}ms`,
+        message: `❌ Rejected promise in ${err} ms`,
         position: 'topRight',
         icon: 'none',
       });
     });
+  return promise;
 });
 
 /*
