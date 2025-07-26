@@ -3,6 +3,8 @@ import 'flatpickr/dist/flatpickr.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
+const closeSVGLink = new URL('../img/x-octagon.svg', import.meta.url).href;
+
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
@@ -62,7 +64,7 @@ const options = {
         messageSize: '16px',
         messageLineHeight: 1.5,
         position: 'topRight',
-        iconUrl: './img/x-octagon.svg',
+        iconUrl: closeSVGLink,
       });
       refs.dataStart.disabled = true;
     } else if (selectedDates[0] > new Date()) {
