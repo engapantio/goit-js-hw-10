@@ -100,13 +100,14 @@ refs.dataStart.addEventListener('click', () => {
   let i = Math.floor((end - todayMs) / 1000);
   refs.intervalId = setInterval(function () {
     i--;
-    if (i >= 0) {
+    if (i > 0) {
       timeCount();
     } else {
-      setTimeout(() => {
+      Array.from(refs.dataPoints).forEach(datapoint => {
+        datapoint.textContent = "00"
+        })
         clearInterval(refs.intervalId);
         refs.dateTimePicker.disabled = false;
-      }, 0);
     }
   }, 1000);
 });
