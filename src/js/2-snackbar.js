@@ -2,13 +2,12 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const formElement = document.querySelector('form.form');
-const checkedRadio = document.querySelector('input[type="radio"]:checked');
  
 formElement.addEventListener('submit', e => {
   e.preventDefault();
 
  const selection = formElement.elements.state.value;
-  console.log(selection);
+  
   const delay = Number.parseInt(formElement.elements.delay.value);
   const promise = new Promise((resolve, reject) => {
     setTimeout(() => {
